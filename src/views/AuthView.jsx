@@ -30,7 +30,7 @@ export const AuthView = () => {
 
       {/* FOOTER NOTE */}
       <footer className="text-center text-[11px] text-slate-400 dark:text-slate-500 pb-2">
-        Project Better Tomorrow – Pathway B: Fresh Discovery Track
+        © 2026 SpendWise. All rights reserved.
       </footer>
     </div>
   );

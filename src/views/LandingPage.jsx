@@ -5,10 +5,8 @@ import {
   ShieldCheck, 
   BarChart3, 
   PieChart, 
-  Smartphone, 
   Lock,
-  Layers,
-  Heart
+  CheckCircle2
 } from 'lucide-react';
 import { useExpenses } from '../context/ExpenseContext';
 import { Footer } from '../components/layout/Footer';
@@ -40,7 +38,7 @@ export const LandingPage = () => {
               className="px-4 py-2 text-xs font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 rounded-xl transition-all flex items-center gap-1.5"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>View Demo</span>
+              <span>Try Demo</span>
             </button>
 
             <button
@@ -59,7 +57,7 @@ export const LandingPage = () => {
         <section className="px-6 py-16 sm:py-24 max-w-5xl mx-auto text-center space-y-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-50 dark:bg-brand-950/60 border border-brand-200/60 dark:border-brand-800/60 text-brand-700 dark:text-brand-300 text-xs font-medium">
             <ShieldCheck className="w-4 h-4 text-brand-500" />
-            <span>Project Better Tomorrow – Pathway B: Fresh Discovery Track</span>
+            <span>Smart Student Expense Management</span>
           </div>
 
           <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white max-w-3xl mx-auto leading-tight">
@@ -67,7 +65,7 @@ export const LandingPage = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
-            Track your everyday expenses, understand your spending habits, and stay within your budget.
+            SpendWise helps students track everyday expenses, manage budgets, and understand their spending habits in one simple place.
           </p>
 
           <div className="pt-4 flex flex-wrap justify-center items-center gap-4">
@@ -89,13 +87,6 @@ export const LandingPage = () => {
               <Sparkles className="w-4 h-4 text-amber-500" />
               <span>Explore Interactive Demo</span>
             </button>
-          </div>
-
-          {/* PROJECT DISCLAIMER BADGE */}
-          <div className="mt-8 pt-6 border-t border-slate-200/60 dark:border-slate-800/60 max-w-xl mx-auto text-xs text-slate-500 dark:text-slate-400">
-            <p>
-              💡 <strong>Prototype Note:</strong> SpendWise is a design-thinking prototype created for student financial discovery. Data is kept private and stored strictly in your browser.
-            </p>
           </div>
         </section>
 
@@ -139,7 +130,7 @@ export const LandingPage = () => {
                 </div>
                 <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">Understand Spending</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  View daily averages, top 3 categories, and period-over-period trends calculated directly from your entries.
+                  View daily averages, top categories, and spending trends calculated directly from your entries.
                 </p>
               </div>
 
@@ -148,9 +139,9 @@ export const LandingPage = () => {
                 <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
                   <Lock className="w-5 h-5" />
                 </div>
-                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">Student Privacy</h3>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">Secure Accounts</h3>
                 <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  No bank logins, no passwords, no ads. All data remains saved locally in your browser's private storage.
+                  Your expenses are securely saved and accessible only through your authenticated student account.
                 </p>
               </div>
             </div>

@@ -1,4 +1,4 @@
-// LocalStorage engine for SpendWise prototype
+// LocalStorage engine for SpendWise fallback data
 import { DEFAULT_MONTHLY_BUDGET, INITIAL_CATEGORY_BUDGETS } from './demoData';
 
 const STORAGE_KEYS = {

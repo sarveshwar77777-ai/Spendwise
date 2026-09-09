@@ -24,7 +24,7 @@ export const AIChat = () => {
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hello! I am **SpendWise AI** (Prototype). Ask me questions about your student spending, category breakdowns, or daily budgets!",
+      text: "Hello! I am **SpendWise AI**. Ask me questions about your spending, category breakdowns, or daily budgets!",
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
   ]);
@@ -58,7 +58,7 @@ export const AIChat = () => {
 
     // Simulate response delay for natural UX
     setTimeout(() => {
-      // Deterministic analytical processing based on local data
+      // Analytical processing based on user expense data
       const aiReplyText = processAIQuery(query, expenses, budget, settings.currency);
 
       const aiMsg = {
@@ -85,16 +85,11 @@ export const AIChat = () => {
             <div className="flex items-center gap-2">
               <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base">SpendWise AI</h3>
               <span className="px-2 py-0.5 text-[10px] font-semibold bg-brand-100 dark:bg-brand-950/80 text-brand-700 dark:text-brand-300 rounded-md border border-brand-200 dark:border-brand-800">
-                Prototype AI Insights
+                AI Insights
               </span>
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400">Ask questions about your spending habits and budget goals.</p>
           </div>
-        </div>
-
-        <div className="hidden sm:flex items-center gap-1 text-[11px] text-slate-400 bg-slate-100 dark:bg-slate-800 px-2.5 py-1 rounded-lg">
-          <Code className="w-3.5 h-3.5" />
-          <span>Local JS Analytics</span>
         </div>
       </div>
 
@@ -122,7 +117,6 @@ export const AIChat = () => {
               >
                 <div className="whitespace-pre-wrap leading-relaxed">
                   {msg.text.split('\n').map((line, idx) => {
-                    // Simple Markdown bold text renderer
                     const parts = line.split(/(\*\*.*?\*\*)/g);
                     return (
                       <p key={idx} className={idx > 0 ? 'mt-1.5' : ''}>

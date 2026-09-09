@@ -34,7 +34,7 @@ export const Navigation = () => {
     { id: 'expenses', label: 'Expenses', icon: Receipt },
     { id: 'budget', label: 'Budget', icon: PieChart },
     { id: 'insights', label: 'Insights', icon: Sparkles },
-    { id: 'ai-assistant', label: 'AI Assistant', icon: Bot, badge: 'Prototype' },
+    { id: 'ai-assistant', label: 'AI Assistant', icon: Bot },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
 

@@ -164,7 +164,7 @@ export const generateInsights = (expenses = [], monthlyBudget = 10000, categoryB
   };
 };
 
-// Prototype AI Query Processor (Deterministic JavaScript Analyzer)
+// SpendWise AI Query Processor (Deterministic Analytics Engine)
 export const processAIQuery = (query, expenses = [], budgetData = {}, currency = '₹') => {
   const q = query.toLowerCase().trim();
   const { monthlyBudget = 10000, categoryBudgets = {} } = budgetData;

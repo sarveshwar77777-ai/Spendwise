@@ -128,7 +128,7 @@ export const SettingsView = () => {
           <span>Demo Data Controls</span>
         </h3>
         <p className="text-xs text-slate-500">
-          Load or clear sample student spending data for presentation or user testing purposes.
+          Load or clear sample student spending data for presentation or preview purposes.
         </p>
 
         <div className="pt-2 flex flex-wrap gap-3">
@@ -137,7 +137,7 @@ export const SettingsView = () => {
               onClick={removeDemoData}
               className="px-4 py-2.5 bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 rounded-xl text-xs font-semibold hover:bg-amber-100"
             >
-              Remove Demo Data
+              Exit Demo
             </button>
           ) : (
             <button
@@ -158,13 +158,13 @@ export const SettingsView = () => {
           <span>Reset All Expense Data</span>
         </h3>
         <p className="text-xs text-rose-600/80 dark:text-rose-400">
-          Wipe all locally stored expenses, budget settings, and custom choices permanently.
+          Wipe all stored expenses, budget settings, and custom choices permanently.
         </p>
         <button
           onClick={() => setConfirmWipeOpen(true)}
           className="px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-xl shadow-sm transition-all"
         >
-          Clear All Local Data
+          Clear All Data
         </button>
       </div>
 
@@ -179,7 +179,7 @@ export const SettingsView = () => {
         <div className="space-y-4">
           <div className="p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 rounded-xl text-xs text-rose-700 dark:text-rose-300 flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-rose-500 flex-shrink-0 mt-0.5" />
-            <span>Are you sure you want to clear all stored expense records? This will reset your prototype data to a completely blank slate.</span>
+            <span>Are you sure you want to clear all stored expense records? This will reset your data to a completely blank slate.</span>
           </div>
 
           <div className="flex justify-end gap-3 pt-2">
