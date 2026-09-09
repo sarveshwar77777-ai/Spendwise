@@ -10,12 +10,23 @@ import {
   Home,
   Sun,
   Moon,
-  ShieldAlert
+  LogIn,
+  LogOut,
+  UserCheck
 } from 'lucide-react';
 import { useExpenses } from '../../context/ExpenseContext';
 
 export const Navigation = () => {
-  const { activeView, setActiveView, isDemo, settings, toggleTheme } = useExpenses();
+  const { 
+    activeView, 
+    setActiveView, 
+    isDemo, 
+    settings, 
+    toggleTheme, 
+    user, 
+    profile, 
+    signOut 
+  } = useExpenses();
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -47,18 +58,42 @@ export const Navigation = () => {
           </button>
         </div>
 
-        {/* Demo Mode Badge if Active */}
-        {isDemo && (
+        {/* User Account / Auth Status Badge */}
+        {user ? (
+          <div className="mx-4 mt-4 p-3 bg-brand-50/80 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/40 rounded-2xl flex items-center justify-between">
+            <div className="flex items-center gap-2 overflow-hidden">
+              <div className="w-7 h-7 rounded-xl bg-brand-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
+                {profile?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+              </div>
+              <div className="truncate">
+                <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 block truncate">
+                  {profile?.full_name || 'Student Account'}
+                </span>
+                <span className="text-[10px] text-slate-500 block truncate">{user.email}</span>
+              </div>
+            </div>
+          </div>
+        ) : isDemo ? (
           <div className="mx-4 mt-4 px-3 py-2 bg-amber-50 dark:bg-amber-950/40 border border-amber-200/80 dark:border-amber-800/50 rounded-xl flex items-center justify-between">
             <span className="text-xs font-semibold text-amber-700 dark:text-amber-400 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
               Demo Mode
             </span>
             <button
-              onClick={() => setActiveView('settings')}
+              onClick={() => setActiveView('auth')}
               className="text-[10px] font-bold underline text-amber-600 dark:text-amber-300 hover:text-amber-800"
             >
-              Manage
+              Sign In
+            </button>
+          </div>
+        ) : (
+          <div className="mx-4 mt-4">
+            <button
+              onClick={() => setActiveView('auth')}
+              className="w-full py-2.5 px-3 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
+            >
+              <LogIn className="w-4 h-4" />
+              <span>Sign In / Sign Up</span>
             </button>
           </div>
         )}
@@ -94,6 +129,18 @@ export const Navigation = () => {
 
         {/* Bottom Actions: Theme Toggle & Landing Link */}
         <div className="p-4 border-t border-slate-100 dark:border-slate-800/80 space-y-2">
+          {user && (
+            <button
+              onClick={signOut}
+              className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-semibold text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <LogOut className="w-4 h-4" />
+                <span>Sign Out</span>
+              </span>
+            </button>
+          )}
+
           <button
             onClick={toggleTheme}
             className="w-full flex items-center justify-between px-3.5 py-2 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -136,17 +183,17 @@ export const Navigation = () => {
           );
         })}
         
-        {/* More Options / Settings */}
+        {/* Auth / Account Mobile Tab */}
         <button
-          onClick={() => setActiveView(activeView === 'ai-assistant' ? 'settings' : 'ai-assistant')}
+          onClick={() => setActiveView(user ? 'settings' : 'auth')}
           className={`flex flex-col items-center py-1.5 px-2 rounded-xl text-[10px] font-medium transition-colors ${
-            ['ai-assistant', 'settings'].includes(activeView)
+            ['auth', 'settings'].includes(activeView)
               ? 'text-brand-600 dark:text-brand-400 font-bold'
               : 'text-slate-500 dark:text-slate-400'
           }`}
         >
-          <Bot className="w-5 h-5 mb-0.5" />
-          <span>AI & Config</span>
+          {user ? <UserCheck className="w-5 h-5 mb-0.5 text-brand-500" /> : <LogIn className="w-5 h-5 mb-0.5" />}
+          <span>{user ? 'Account' : 'Sign In'}</span>
         </button>
       </div>
     </>

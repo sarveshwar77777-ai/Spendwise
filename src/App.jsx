@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ExpenseProvider, useExpenses } from './context/ExpenseContext';
 import { Navigation } from './components/layout/Navigation';
 import { Header } from './components/layout/Header';
@@ -6,6 +6,7 @@ import { Footer } from './components/layout/Footer';
 import { Toast } from './components/ui/Toast';
 
 import { LandingPage } from './views/LandingPage';
+import { AuthView } from './views/AuthView';
 import { DashboardView } from './views/DashboardView';
 import { AddExpenseView } from './views/AddExpenseView';
 import { ExpensesView } from './views/ExpensesView';
@@ -14,13 +15,43 @@ import { InsightsView } from './views/InsightsView';
 import { AIAssistantView } from './views/AIAssistantView';
 import { SettingsView } from './views/SettingsView';
 
+const PROTECTED_VIEWS = ['dashboard', 'add-expense', 'expenses', 'budget', 'insights', 'ai-assistant', 'settings'];
+
 const MainLayout = () => {
-  const { activeView } = useExpenses();
+  const { activeView, setActiveView, user, isDemo, authLoading } = useExpenses();
+
+  // Protected Route Guard Effect
+  useEffect(() => {
+    if (authLoading) return;
+
+    const isProtected = PROTECTED_VIEWS.includes(activeView);
+    if (isProtected && !user && !isDemo) {
+      setActiveView('auth');
+    }
+  }, [activeView, user, isDemo, authLoading, setActiveView]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center space-y-3">
+        <div className="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
+        <span className="text-xs font-semibold text-slate-500">Loading SpendWise...</span>
+      </div>
+    );
+  }
 
   if (activeView === 'landing') {
     return (
       <>
         <LandingPage />
+        <Toast />
+      </>
+    );
+  }
+
+  if (activeView === 'auth') {
+    return (
+      <>
+        <AuthView />
         <Toast />
       </>
     );
