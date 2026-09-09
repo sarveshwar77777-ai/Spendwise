@@ -6,7 +6,9 @@ const STORAGE_KEYS = {
   BUDGET: 'spendwise_budget_v1',
   SETTINGS: 'spendwise_settings_v1',
   IS_DEMO: 'spendwise_is_demo_v1',
-  USER: 'spendwise_user_v1'
+  USERS: 'spendwise_users_v1',
+  CURRENT_USER: 'spendwise_current_user_v1',
+  LEGACY_USER: 'spendwise_user_v1'
 };
 
 // Default Settings
@@ -54,11 +56,40 @@ export const saveSettings = (settings) => setStoredData(STORAGE_KEYS.SETTINGS, s
 export const loadIsDemo = () => getStoredData(STORAGE_KEYS.IS_DEMO, false);
 export const saveIsDemo = (isDemo) => setStoredData(STORAGE_KEYS.IS_DEMO, isDemo);
 
-// User (simple localStorage auth)
-export const loadUser = () => getStoredData(STORAGE_KEYS.USER, null);
-export const saveUser = (user) => setStoredData(STORAGE_KEYS.USER, user);
-export const removeUser = () => {
-  try { localStorage.removeItem(STORAGE_KEYS.USER); } catch (e) {}
+// Users List (Unique Usernames)
+export const loadUsers = () => {
+  const users = getStoredData(STORAGE_KEYS.USERS, []);
+  // Legacy migration if spendwise_user_v1 exists
+  const legacy = getStoredData(STORAGE_KEYS.LEGACY_USER, null);
+  if (legacy && legacy.name && !users.some(u => u.username.toLowerCase() === legacy.name.toLowerCase())) {
+    users.push({
+      username: legacy.name,
+      password: legacy.password,
+      createdAt: new Date().toISOString()
+    });
+    setStoredData(STORAGE_KEYS.USERS, users);
+  }
+  return users;
+};
+export const saveUsers = (users) => setStoredData(STORAGE_KEYS.USERS, users);
+
+// Current User Session
+export const loadCurrentUser = () => {
+  const current = getStoredData(STORAGE_KEYS.CURRENT_USER, null);
+  if (current?.loggedIn) return current;
+  // Legacy check
+  const legacy = getStoredData(STORAGE_KEYS.LEGACY_USER, null);
+  if (legacy?.loggedIn) {
+    return { username: legacy.name, loggedIn: true };
+  }
+  return null;
+};
+export const saveCurrentUser = (user) => setStoredData(STORAGE_KEYS.CURRENT_USER, user);
+export const removeCurrentUser = () => {
+  try {
+    localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+    localStorage.removeItem(STORAGE_KEYS.LEGACY_USER);
+  } catch (e) {}
 };
 
 // Clear All App Data

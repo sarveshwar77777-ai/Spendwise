@@ -4,18 +4,27 @@ import {
   loadBudget, saveBudget,
   loadSettings, saveSettings,
   loadIsDemo, saveIsDemo,
-  loadUser, saveUser, removeUser,
+  loadUsers, saveUsers,
+  loadCurrentUser, saveCurrentUser, removeCurrentUser,
   clearAllData
 } from '../utils/storage';
 import { getDemoExpenses, DEFAULT_MONTHLY_BUDGET, INITIAL_CATEGORY_BUDGETS } from '../utils/demoData';
 
 const ExpenseContext = createContext(null);
 
+// Password validation helper
+export const validatePasswordRules = (pwd) => {
+  return {
+    minLength: pwd.length >= 8,
+    hasUpper: /[A-Z]/.test(pwd),
+    hasLower: /[a-z]/.test(pwd),
+    hasNumber: /[0-9]/.test(pwd),
+    hasSpecial: /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~`]/.test(pwd)
+  };
+};
+
 export const ExpenseProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const u = loadUser();
-    return u?.loggedIn ? u : null;
-  });
+  const [user, setUser] = useState(() => loadCurrentUser());
   const [expenses, setExpenses] = useState(() => loadExpenses());
   const [budget, setBudget] = useState(() => loadBudget());
   const [settings, setSettings] = useState(() => loadSettings());
@@ -46,40 +55,89 @@ export const ExpenseProvider = ({ children }) => {
     setTimeout(() => setToast(prev => prev?.id === id ? null : prev), 4000);
   };
 
-  // ── AUTH ─────────────────────────────────────────────────────────────
-  // Sign up: store name + hashed-like password in localStorage
-  const signUp = (name, password) => {
-    const existing = loadUser();
-    if (existing && existing.name === name) {
-      return { error: 'A user with this name is already registered on this device.' };
+  // ── AUTH (Username + Strict Password + Unique Username) ───────────────
+  const signUp = (rawUsername, password) => {
+    const username = rawUsername.trim();
+    if (!username) {
+      return { error: 'Please enter a username.' };
     }
-    const newUser = { name: name.trim(), password, loggedIn: true };
-    saveUser(newUser);
-    setUser(newUser);
-    showToast(`Welcome, ${name}! Your account is ready.`);
+    if (username.length < 3) {
+      return { error: 'Username must be at least 3 characters long.' };
+    }
+
+    // Check unique username
+    const existingUsers = loadUsers();
+    const isTaken = existingUsers.some(
+      u => u.username.toLowerCase() === username.toLowerCase()
+    );
+    if (isTaken) {
+      return { error: `Username "${username}" is already taken. Please choose another username or sign in.` };
+    }
+
+    // Validate password rules
+    const rules = validatePasswordRules(password);
+    if (!rules.minLength) {
+      return { error: 'Password must be at least 8 characters long.' };
+    }
+    if (!rules.hasUpper) {
+      return { error: 'Password must contain at least one uppercase letter (A-Z).' };
+    }
+    if (!rules.hasLower) {
+      return { error: 'Password must contain at least one lowercase letter (a-z).' };
+    }
+    if (!rules.hasNumber) {
+      return { error: 'Password must contain at least one number (0-9).' };
+    }
+    if (!rules.hasSpecial) {
+      return { error: 'Password must contain at least one special character (!@#$%^&*).' };
+    }
+
+    const newUserRecord = {
+      username,
+      password,
+      createdAt: new Date().toISOString()
+    };
+
+    saveUsers([...existingUsers, newUserRecord]);
+
+    const sessionUser = { username, name: username, loggedIn: true };
+    saveCurrentUser(sessionUser);
+    setUser(sessionUser);
+    showToast(`Welcome, ${username}! Your account is ready.`);
     return { error: null };
   };
 
-  // Sign in: compare name + password
-  const signIn = (name, password) => {
-    const stored = loadUser();
-    if (!stored) {
-      return { error: 'No account found. Please sign up first.' };
+  const signIn = (rawUsername, password) => {
+    const username = rawUsername.trim();
+    if (!username) {
+      return { error: 'Please enter your username.' };
     }
-    if (stored.name !== name.trim() || stored.password !== password) {
-      return { error: 'Invalid name or password.' };
+    if (!password) {
+      return { error: 'Please enter your password.' };
     }
-    const loggedIn = { ...stored, loggedIn: true };
-    saveUser(loggedIn);
-    setUser(loggedIn);
-    showToast(`Welcome back, ${name}!`);
+
+    const existingUsers = loadUsers();
+    const foundUser = existingUsers.find(
+      u => u.username.toLowerCase() === username.toLowerCase()
+    );
+
+    if (!foundUser) {
+      return { error: `No account found with username "${username}". Please sign up first.` };
+    }
+
+    if (foundUser.password !== password) {
+      return { error: 'Incorrect password. Please verify your credentials and try again.' };
+    }
+
+    const sessionUser = { username: foundUser.username, name: foundUser.username, loggedIn: true };
+    saveCurrentUser(sessionUser);
+    setUser(sessionUser);
+    showToast(`Welcome back, ${foundUser.username}!`);
     return { error: null };
   };
 
-  // Sign out
   const signOut = () => {
-    const updated = { ...user, loggedIn: false };
-    saveUser(updated);
+    removeCurrentUser();
     setUser(null);
     setActiveView('auth');
     showToast('Signed out successfully.', 'info');
