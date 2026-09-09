@@ -1,0 +1,104 @@
+import React from 'react';
+import { PlusCircle, Sparkles, Sun, Moon, Shield } from 'lucide-react';
+import { useExpenses } from '../../context/ExpenseContext';
+
+export const Header = () => {
+  const { 
+    activeView, 
+    setActiveView, 
+    isDemo, 
+    loadDemoData, 
+    removeDemoData, 
+    settings, 
+    toggleTheme 
+  } = useExpenses();
+
+  // Dynamic Greeting based on local time
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good morning 👋';
+    if (hour < 17) return 'Good afternoon 👋';
+    return 'Good evening 👋';
+  };
+
+  const titles = {
+    dashboard: { title: getGreeting(), subtitle: "Here's your spending overview." },
+    'add-expense': { title: 'Add New Expense', subtitle: 'Log your everyday spending with payment details.' },
+    expenses: { title: 'Expense History', subtitle: 'Search, filter, edit, and sort your transactions.' },
+    budget: { title: 'Budget Management', subtitle: 'Set monthly limits and keep your category spending in check.' },
+    insights: { title: 'Spending Insights', subtitle: 'Automated analytics derived strictly from your stored data.' },
+    'ai-assistant': { title: 'SpendWise AI', subtitle: 'Ask questions about your spending in natural language.' },
+    settings: { title: 'Settings & Storage', subtitle: 'Manage preferences, currency, and local data.' }
+  };
+
+  const currentMeta = titles[activeView] || { title: 'SpendWise', subtitle: 'Student Expense Manager' };
+
+  return (
+    <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-8 py-5 sticky top-0 z-20">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-7xl mx-auto">
+        {/* Title & Subtitle */}
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+              {currentMeta.title}
+            </h1>
+            {isDemo && (
+              <span className="px-2 py-0.5 text-xs font-semibold bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-300 rounded-md border border-amber-200 dark:border-amber-800">
+                Demo Data
+              </span>
+            )}
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            {currentMeta.subtitle}
+          </p>
+        </div>
+
+        {/* Action Controls */}
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          {/* Quick Demo Data Toggle Button */}
+          {isDemo ? (
+            <button
+              onClick={removeDemoData}
+              className="px-3 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/60 hover:bg-amber-100 dark:hover:bg-amber-900/60 border border-amber-200 dark:border-amber-800 rounded-xl transition-all"
+            >
+              Remove Demo Data
+            </button>
+          ) : (
+            <button
+              onClick={loadDemoData}
+              className="px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200/60 dark:border-slate-700 rounded-xl transition-all flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Load Demo Data</span>
+            </button>
+          )}
+
+          {/* Quick Add Expense CTA button if not already on add-expense tab */}
+          {activeView !== 'add-expense' && (
+            <button
+              onClick={() => setActiveView('add-expense')}
+              className="px-3.5 py-1.5 text-xs font-semibold text-white bg-brand-600 hover:bg-brand-700 rounded-xl shadow-sm transition-all flex items-center gap-1.5"
+            >
+              <PlusCircle className="w-4 h-4" />
+              <span className="hidden xs:inline">Add Expense</span>
+            </button>
+          )}
+
+          {/* Dark Mode Icon Toggle */}
+          <button
+            onClick={toggleTheme}
+            className="p-2 rounded-xl text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-100 bg-slate-100 dark:bg-slate-800 transition-colors"
+            title="Toggle Light/Dark Theme"
+            aria-label="Toggle Theme"
+          >
+            {settings.theme === 'dark' ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-slate-600" />
+            )}
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+};
