@@ -18,26 +18,15 @@ import { SettingsView } from './views/SettingsView';
 const PROTECTED_VIEWS = ['dashboard', 'add-expense', 'expenses', 'budget', 'insights', 'ai-assistant', 'settings'];
 
 const MainLayout = () => {
-  const { activeView, setActiveView, user, isDemo, authLoading } = useExpenses();
+  const { activeView, setActiveView, user, isDemo } = useExpenses();
 
   // Protected Route Guard Effect
   useEffect(() => {
-    if (authLoading) return;
-
     const isProtected = PROTECTED_VIEWS.includes(activeView);
     if (isProtected && !user && !isDemo) {
       setActiveView('auth');
     }
-  }, [activeView, user, isDemo, authLoading, setActiveView]);
-
-  if (authLoading) {
-    return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center space-y-3">
-        <div className="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin"></div>
-        <span className="text-xs font-semibold text-slate-500">Loading SpendWise...</span>
-      </div>
-    );
-  }
+  }, [activeView, user, isDemo, setActiveView]);
 
   if (activeView === 'landing') {
     return (

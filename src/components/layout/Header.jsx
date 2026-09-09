@@ -1,7 +1,6 @@
 import React from 'react';
-import { PlusCircle, Sparkles, Sun, Moon, LogOut, User as UserIcon, LogIn, AlertCircle } from 'lucide-react';
+import { PlusCircle, Sparkles, Sun, Moon, LogOut, User as UserIcon, LogIn } from 'lucide-react';
 import { useExpenses } from '../../context/ExpenseContext';
-import { isSupabaseConfigured } from '../../lib/supabase';
 
 export const Header = () => {
   const { 
@@ -13,18 +12,17 @@ export const Header = () => {
     settings, 
     toggleTheme,
     user,
-    profile,
     signOut
   } = useExpenses();
 
-  // Dynamic Greeting based on local time and profile
+  // Dynamic Greeting based on local time and user name
   const getGreeting = () => {
     const hour = new Date().getHours();
     let timeOfDay = 'morning';
     if (hour >= 12 && hour < 17) timeOfDay = 'afternoon';
     if (hour >= 17) timeOfDay = 'evening';
 
-    const name = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
+    const name = user?.name;
     return name ? `Good ${timeOfDay}, ${name} 👋` : `Good ${timeOfDay} 👋`;
   };
 
@@ -42,21 +40,6 @@ export const Header = () => {
 
   return (
     <header className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 px-4 sm:px-8 py-4 sticky top-0 z-20 space-y-2">
-      {!isSupabaseConfigured && (
-        <div className="bg-amber-50 dark:bg-amber-950/50 border border-amber-200 dark:border-amber-800/60 rounded-xl px-3.5 py-2 text-xs text-amber-800 dark:text-amber-300 flex items-center justify-between gap-2 max-w-7xl mx-auto">
-          <span className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-500 flex-shrink-0" />
-            <span><strong>Supabase Setup Required:</strong> Please set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> in <code>.env.local</code> to enable live authentication and cloud persistence.</span>
-          </span>
-          <button 
-            onClick={() => setActiveView('settings')} 
-            className="underline font-bold text-amber-700 dark:text-amber-200 hover:text-amber-900 whitespace-nowrap"
-          >
-            Instructions
-          </button>
-        </div>
-      )}
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 max-w-7xl mx-auto">
         {/* Title & Subtitle */}
         <div>
@@ -112,7 +95,7 @@ export const Header = () => {
               <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300">
                 <UserIcon className="w-3.5 h-3.5 text-brand-500" />
                 <span className="max-w-[120px] truncate">
-                  {profile?.full_name || user.email?.split('@')[0]}
+                  {user.name}
                 </span>
               </div>
 
@@ -131,7 +114,7 @@ export const Header = () => {
               className="px-3.5 py-1.5 text-xs font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/60 hover:bg-brand-100 dark:hover:bg-brand-900/60 border border-brand-200 dark:border-brand-800 rounded-xl transition-all flex items-center gap-1.5"
             >
               <LogIn className="w-4 h-4" />
-              <span>Sign In / Sign Up</span>
+              <span>Sign In</span>
             </button>
           )}
 

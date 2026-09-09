@@ -1,11 +1,12 @@
-// LocalStorage engine for SpendWise fallback data
+// LocalStorage engine for SpendWise
 import { DEFAULT_MONTHLY_BUDGET, INITIAL_CATEGORY_BUDGETS } from './demoData';
 
 const STORAGE_KEYS = {
   EXPENSES: 'spendwise_expenses_v1',
   BUDGET: 'spendwise_budget_v1',
   SETTINGS: 'spendwise_settings_v1',
-  IS_DEMO: 'spendwise_is_demo_v1'
+  IS_DEMO: 'spendwise_is_demo_v1',
+  USER: 'spendwise_user_v1'
 };
 
 // Default Settings
@@ -53,13 +54,17 @@ export const saveSettings = (settings) => setStoredData(STORAGE_KEYS.SETTINGS, s
 export const loadIsDemo = () => getStoredData(STORAGE_KEYS.IS_DEMO, false);
 export const saveIsDemo = (isDemo) => setStoredData(STORAGE_KEYS.IS_DEMO, isDemo);
 
+// User (simple localStorage auth)
+export const loadUser = () => getStoredData(STORAGE_KEYS.USER, null);
+export const saveUser = (user) => setStoredData(STORAGE_KEYS.USER, user);
+export const removeUser = () => {
+  try { localStorage.removeItem(STORAGE_KEYS.USER); } catch (e) {}
+};
+
 // Clear All App Data
 export const clearAllData = () => {
   try {
-    localStorage.removeItem(STORAGE_KEYS.EXPENSES);
-    localStorage.removeItem(STORAGE_KEYS.BUDGET);
-    localStorage.removeItem(STORAGE_KEYS.SETTINGS);
-    localStorage.removeItem(STORAGE_KEYS.IS_DEMO);
+    Object.values(STORAGE_KEYS).forEach(key => localStorage.removeItem(key));
   } catch (error) {
     console.error('Error clearing localStorage data:', error);
   }

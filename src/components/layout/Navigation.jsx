@@ -24,7 +24,6 @@ export const Navigation = () => {
     settings, 
     toggleTheme, 
     user, 
-    profile, 
     signOut 
   } = useExpenses();
 
@@ -62,14 +61,14 @@ export const Navigation = () => {
         {user ? (
           <div className="mx-4 mt-4 p-3 bg-brand-50/80 dark:bg-brand-950/40 border border-brand-200/60 dark:border-brand-800/40 rounded-2xl flex items-center justify-between">
             <div className="flex items-center gap-2 overflow-hidden">
-              <div className="w-7 h-7 rounded-xl bg-brand-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0">
-                {profile?.full_name?.charAt(0) || user.email?.charAt(0).toUpperCase()}
+              <div className="w-7 h-7 rounded-xl bg-brand-600 text-white flex items-center justify-center text-xs font-bold flex-shrink-0 uppercase">
+                {user.name?.charAt(0) || 'U'}
               </div>
               <div className="truncate">
                 <span className="font-semibold text-xs text-slate-800 dark:text-slate-200 block truncate">
-                  {profile?.full_name || 'Student Account'}
+                  {user.name}
                 </span>
-                <span className="text-[10px] text-slate-500 block truncate">{user.email}</span>
+                <span className="text-[10px] text-emerald-600 dark:text-emerald-400 block truncate font-medium">Logged In</span>
               </div>
             </div>
           </div>
@@ -117,11 +116,6 @@ export const Navigation = () => {
                   <Icon className={`w-5 h-5 ${isActive ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 dark:text-slate-500'}`} />
                   <span>{item.label}</span>
                 </div>
-                {item.badge && (
-                  <span className="px-2 py-0.5 text-[10px] font-semibold bg-brand-100 dark:bg-brand-900/60 text-brand-700 dark:text-brand-300 rounded-full">
-                    {item.badge}
-                  </span>
-                )}
               </button>
             );
           })}
